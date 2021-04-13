@@ -9,9 +9,28 @@ module pipe(Clk, Reset, Start, PipePosY, PipePosX, Lost);
     reg [9:0] waitReg;
     reg Time;
 
+    reg [49:0] PipeSpeed;
+
 	localparam 	
 	I = 5'b00001, PREP = 5'b00010, MOVE = 5'b00100, LOST = 5'b10000, UNK = 5'bXXXXX;
 	
+    initial begin
+        PipeSpeed <= 0;
+        PipePosX <= 1000;
+        PipePosY <= 250;
+        state <= I;
+    end
+
+    always @ (posedge Clk) 
+    begin
+        PipeSpeed <= PipeSpeed + 1;
+        if (PipeSpeed >= 50'd500000)
+        begin
+            PipePosX <= PipePosX - 1;
+            PipeSpeed <= 0;
+        end
+    end
+
 	// NSL AND SM
 	always @ (posedge Clk, posedge Reset)
 	begin 
@@ -37,13 +56,13 @@ module pipe(Clk, Reset, Start, PipePosY, PipePosX, Lost);
                 end
                 MOVE:
                 begin
-                    PipePosX <= PipePosX - 1;
-                    if (PipePosX == 0) state <= PREP;
+                    if (PipePosX <= 0) state <= PREP;
                 end
                 PREP:
                 begin
-                    PipePosX <= 1000;
+                    PipePosX <= 900;
                     PipePosY <= $random%475 + 25;
+                    state <= MOVE;
                 end
                 LOST:
                 begin
