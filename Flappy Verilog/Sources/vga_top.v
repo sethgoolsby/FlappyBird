@@ -25,6 +25,7 @@ module vga_top(
 	input ClkPort,
 	input BtnC,
 	input BtnU,
+	input btnCpuReset,
 	
 	//VGA signal
 	output hSync, vSync,
@@ -43,6 +44,11 @@ module vga_top(
 	wire [6:0] ssdOut;
 	wire [3:0] anode;
 	wire [11:0] rgb;
+	wire [9:0] PipeX;
+	wire [9:0] PipeY;
+	wire lost;
+
+	pipe p(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .PipePosY(PipeY), .PipePosX(PipeX), .Lost(lost));
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
 	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score));
 	counter cnt(.clk(ClkPort), .displayNumber(score), .anode(anode), .ssdOut(ssdOut));

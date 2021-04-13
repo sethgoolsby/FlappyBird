@@ -1,4 +1,4 @@
-module ee354_GCD(Clk, SCEN, Reset, Start, Ack, q_I, q_Grav, q_Flap, q_UnPress, q_Lost);
+module ee354_Flappy(Clk, SCEN, Reset, Start, Ack, q_I, q_Grav, q_Flap, q_UnPress, q_Lost);
 
 	/*  INPUTS */
 	input	Clk, SCEN, Reset, Start, Ack, Flap_Button;
