@@ -1,4 +1,4 @@
-module ee354_Flappy(Clk, SCEN, Reset, Start, Ack, q_I, q_Grav, q_Flap, q_UnPress, q_Lost);
+module ee354_Flappy(Clk, SCEN, Reset, Start, Ack, q_I, q_Grav, q_Flap, q_UnPress, q_Lost, Flap_Button, YBird, XBird);
 
 	/*  INPUTS */
 	input	Clk, SCEN, Reset, Start, Ack, Flap_Button;
@@ -49,16 +49,20 @@ module ee354_Flappy(Clk, SCEN, Reset, Start, Ack, q_I, q_Grav, q_Flap, q_UnPress
 					UNPRESS:
 					  begin
 						if(!Flap_Button)  
-							state <= GRAV
+							state <= GRAV;
 					  end
 					GRAV:
 						begin
 							if(Flap_Button)
-							state <= FLAP
-							YBird <= YBird - 1
+							begin
+							state <= FLAP;
+							YBird <= YBird - 1;
 						end
-					default:		
+						end
+					default:
+					begin		
 						state <= UNK;
+						end
 				endcase
 	end
 		
