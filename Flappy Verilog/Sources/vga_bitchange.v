@@ -26,6 +26,7 @@ module vga_bitchange(
 	input bright,
 	input button,
 	input [9:0] hCount, vCount,
+	input [9:0] PipeY, PipeX,
 	output reg [11:0] rgb,
 	output reg [15:0] score
    );
@@ -52,7 +53,7 @@ module vga_bitchange(
 	always@ (*) // paint a white box on a red background
     	if (~bright)
 		rgb = BLACK; // force black if not bright
-	 else if (greenMiddleSquare == 1)
+	 else if (pipeZone == 1)
 		rgb = GREEN;
 	 else if (whiteZone == 1)
 		rgb = WHITE; // white box
@@ -86,7 +87,7 @@ module vga_bitchange(
 			end
 
 	assign whiteZone = ((hCount >= 10'd144) && (hCount <= 10'd784)) && ((vCount >= 10'd400) && (vCount <= 10'd475)) ? 1 : 0;
-
+	assign pipeZone = ((hCount >= (PipeX - 50)) && (hCount <= (PipeX + 50)) && ((vCount <= PipeY) || (vCount >= (PipeY + 100)))) ? 1 : 0;
 	assign greenMiddleSquare = ((hCount >= 10'd340) && (hCount < 10'd380)) &&
 				   ((vCount >= greenMiddleSquareY) && (vCount <= greenMiddleSquareY + 10'd40)) ? 1 : 0;
 	

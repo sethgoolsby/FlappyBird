@@ -1,4 +1,4 @@
-module ee354_Pipe(Clk, Reset, Start, PipePosY, PipePosX, Lost);
+module pipe(Clk, Reset, Start, PipePosY, PipePosX, Lost);
 
     // 800px x 525px
     output reg [9:0] PipePosY;
@@ -9,23 +9,28 @@ module ee354_Pipe(Clk, Reset, Start, PipePosY, PipePosX, Lost);
     reg [9:0] waitReg;
     reg Time;
 
+    reg [49:0] PipeSpeed;
+
 	localparam 	
 	I = 5'b00001, PREP = 5'b00010, MOVE = 5'b00100, LOST = 5'b10000, UNK = 5'bXXXXX;
 	
-    always @ (posedge Clk, posedge Reset)
+    initial begin
+        PipeSpeed <= 0;
+        PipePosX <= 1000;
+        PipePosY <= 250;
+        state <= I;
+    end
+
+    always @ (posedge Clk) 
     begin
-        if (Reset) waitReg <= 0;       
-        else if (waitReg == 10b'1111111111) 
+        PipeSpeed <= PipeSpeed + 1;
+        if (PipeSpeed >= 50'd500000)
         begin
-            waitReg <= 0;
-            Time <= 1;
-        end
-        else 
-        begin
-            waitReg <= waitReg + 1;
-            Time <= 0;
+            PipePosX <= PipePosX - 1;
+            PipeSpeed <= 0;
         end
     end
+
 	// NSL AND SM
 	always @ (posedge Clk, posedge Reset)
 	begin 
@@ -51,14 +56,13 @@ module ee354_Pipe(Clk, Reset, Start, PipePosY, PipePosX, Lost);
                 end
                 MOVE:
                 begin
-                    PipePosX <= PipePosX - 1;
-                    if (PipePosX == 0) state <= PREP;
+                    if (PipePosX <= 0) state <= PREP;
                 end
                 PREP:
                 begin
-                    PipePosX <= 1000;
+                    PipePosX <= 900;
                     PipePosY <= $random%475 + 25;
-                    if (Time) state <= MOVE;
+                    state <= MOVE;
                 end
                 LOST:
                 begin
