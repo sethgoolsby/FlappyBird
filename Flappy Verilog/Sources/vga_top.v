@@ -25,6 +25,7 @@ module vga_top(
 	input ClkPort,
 	input BtnC,
 	input BtnU,
+	input btnCpuReset,
 	
 	//VGA signal
 	output hSync, vSync,
@@ -43,10 +44,17 @@ module vga_top(
 	wire [6:0] ssdOut;
 	wire [3:0] anode;
 	wire [11:0] rgb;
+	wire [9:0] PipeX;
+	wire [9:0] PipeY;
+	wire [9:0] BirdX;
+	wire [9:0] BirdY;
+	wire lost;
+
+	pipe p(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .PipePosY(PipeY), .PipePosX(PipeX), .Lost(lost));
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
-	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score));
-	counter cnt(.clk(ClkPort), .displayNumber(score), .anode(anode), .ssdOut(ssdOut));
-	
+	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score), .PipeX(PipeX), .PipeY(PipeY));
+	FlappyBird fb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Flap_Button(BtnC), .YBird(BirdY), .XBird(BirdX));
+	//FlappyBird fb(.clk(ClkPort), Reset, Start, Ack, q_I, q_Grav, q_Flap, q_UnPress, q_Lost, Flap_Button, YBird, XBird);
 	assign Dp = 1;
 	assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg} = ssdOut[6 : 0];
     assign {An7, An6, An5, An4, An3, An2, An1, An0} = {4'b1111, anode};
