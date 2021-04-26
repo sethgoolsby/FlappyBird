@@ -34,6 +34,7 @@ module vga_top(
 	//SSG signal 
 	output An0, An1, An2, An3, An4, An5, An6, An7,
 	output Ca, Cb, Cc, Cd, Ce, Cf, Cg, Dp,
+	output Ld0, Ld1, Ld2, Ld3,
 	
 	output MemOE, MemWR, RamCS, QuadSpiFlashCS
 	);
@@ -49,12 +50,13 @@ module vga_top(
 	wire [9:0] BirdX;
 	wire [9:0] BirdY;
 	wire lost;
+	wire birdQI, birdQG, birdQF, birdQU;
 
 	pipe p(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .PipePosY(PipeY), .PipePosX(PipeX), .Lost(lost));
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
-	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score), .PipeX(PipeX), .PipeY(PipeY));
-	FlappyBird fb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Flap_Button(BtnC), .YBird(BirdY), .XBird(BirdX));
-	//FlappyBird fb(.clk(ClkPort), Reset, Start, Ack, q_I, q_Grav, q_Flap, q_UnPress, q_Lost, Flap_Button, YBird, XBird);
+	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score), .PipeX(PipeX), .PipeY(PipeY), .BirdX(BirdX), .BirdY(BirdY));
+	FlappyBird fb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Flap_Button(BtnC), .YBird(BirdY), .XBird(BirdX), .q_I(birdQI), .q_Grav(birdQG), .q_Flap(birdQF), .q_UnPress(birdQU));
+	
 	assign Dp = 1;
 	assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg} = ssdOut[6 : 0];
     assign {An7, An6, An5, An4, An3, An2, An1, An0} = {4'b1111, anode};
@@ -64,6 +66,11 @@ module vga_top(
 	assign vgaG = rgb[7  : 4];
 	assign vgaB = rgb[3  : 0];
 	
+	assign Ld0 = birdQI;
+	assign Ld1 = birdQG;
+	assign Ld2 = birdQF;
+	assign Ld3 = birdQU;
+
 	// disable mamory ports
 	assign {MemOE, MemWR, RamCS, QuadSpiFlashCS} = 4'b1111;
 

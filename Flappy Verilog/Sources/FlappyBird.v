@@ -1,26 +1,30 @@
-module FlappyBird(Clk, Reset, Start, Flap_Button, YBird, XBird);
+
+module FlappyBird(Clk, Reset, Start, Flap_Button, YBird, XBird, q_I, q_Grav, q_Flap, q_UnPress, q_Lost);
 
 	/*  INPUTS */
-	input	Clk, Reset, Start, Ack, Flap_Button;
+	input	Clk, Reset, Start, Flap_Button;
 	
 	output reg [9:0] YBird, XBird;		
-	//output q_I, q_Grav, q_Flap, q_UnPress, q_Lost;
-
+	output q_I, q_Grav, q_Flap, q_UnPress, q_Lost;
 
 	reg [3:0] state;
 	reg [49:0] gravityTimer;
-	reg [9:0] gravity;
+	reg [5:0] gravity;
 
 
-//	assign {q_I, q_Grav, q_Flap, q_UnPress} = state;
+	assign {q_UnPress, q_Flap, q_Grav, q_I}= state;
 		
 	localparam 	
 	I = 4'b0001, GRAV = 4'b0010, FLAP = 4'b0100, UNPRESS = 4'b1000, UNK = 4'bXXXX;
+	initial begin
+		YBird <= 100;
+		XBird <= 500;
+	end
 	
 	// NSL AND SM
 	always @ (posedge Clk, posedge Reset)
 	begin 
-		if(Reset) 
+		if(!Reset) 
 		  begin
 			state <= I;
 			YBird <= 10'bX;
@@ -32,62 +36,66 @@ module FlappyBird(Clk, Reset, Start, Flap_Button, YBird, XBird);
 				case(state)	
 					I:
 					begin
-						YBird <= 500;
-						XBird <= 100;
+						YBird <= 100;
+						XBird <= 500;
 						gravity <= 1;
 						gravityTimer <= 0;
 						if (Start)
 						begin
-							state <= GRAV:
+							state <= GRAV;
 						end
 					end		
 					GRAV:
 					begin
 						gravityTimer <= gravityTimer + 50'd1;
-						if (gravityTimer >= 50'd500000) 
+						if (gravityTimer >= 50'd2000000) 
 						begin
 							gravityTimer <= 50'd0;
-							BirdX <= BirdX - gravity;
+							YBird <= YBird + gravity;
 							gravity <= gravity + 1;
 						end
 						if(Flap_Button)
 						begin
 							state <= FLAP;
-							gravity <= 40;
+							gravity <= 6'b001111;
 							gravityTimer <= 0;
 						end
 					end
 					FLAP:
 					begin
-						if(gravity < 10)
+						if(gravity <= 2)
 						begin
 							state <= UNPRESS;
 							gravity <= 1;
 							gravityTimer <= 0;
 						end
 						gravityTimer <= gravityTimer + 50'd1;
-						if (gravityTimer >= 50'd500000) 
+						if (gravityTimer >= 50'd2000000) 
 						begin
 							gravityTimer <= 50'd0;
-							BirdX <= BirdX + gravity;
+							YBird <= YBird - (gravity + 2) ;
 							gravity <= gravity - 2;
 						end
 					end
 					UNPRESS:
 					begin
+						
 						if(!Flap_Button)
 						begin
 							state <= GRAV;
 						end
 						gravityTimer <= gravityTimer + 50'd1;
-						if (gravityTimer >= 50'd500000) 
+						if (gravityTimer >= 50'd1000000) 
 						begin
 							gravityTimer <= 50'd0;
-							BirdX <= BirdX - gravity;
+							YBird <= YBird + gravity;
 							gravity <= gravity + 1;
 						end
 					end
-					
+					default:
+					begin
+						state <= GRAV;
+					end
 				endcase
 	end
 		

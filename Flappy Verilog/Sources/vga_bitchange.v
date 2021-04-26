@@ -26,7 +26,7 @@ module vga_bitchange(
 	input bright,
 	input button,
 	input [9:0] hCount, vCount,
-	input [9:0] BirbX, BirbY,
+	input [9:0] BirdX, BirdY,
 	input [9:0] PipeY, PipeX,
 	output reg [11:0] rgb,
 	output reg [15:0] score
@@ -89,8 +89,7 @@ module vga_bitchange(
 
 	assign whiteZone = ((hCount >= 10'd144) && (hCount <= 10'd784)) && ((vCount >= 10'd400) && (vCount <= 10'd475)) ? 1 : 0;
 	assign pipeZone = ((hCount >= (PipeX - 50)) && (hCount <= (PipeX + 50)) && ((vCount <= PipeY) || (vCount >= (PipeY + 100)))) ? 1 : 0;
-	assign birbs = ((hCount >= 10'd400) && (hCount <= 10'd450)) && ((vCount >= 10'd400) && (vCount <= 10'd425)) ? 1 : 0;
-	assign greenMiddleSquare = ((hCount >= 10'd340) && (hCount < 10'd380)) &&
-				   ((vCount >= greenMiddleSquareY) && (vCount <= greenMiddleSquareY + 10'd40)) ? 1 : 0;
+	assign birbs = ((hCount >= BirdX - 10) && (hCount <= BirdX + 10 )) && ((vCount >= BirdY-10) && (vCount <= BirdY + 10)) ? 1 : 0;
+
 	
 endmodule
