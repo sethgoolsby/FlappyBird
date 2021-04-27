@@ -56,7 +56,7 @@ module vga_top(
 
 	pipe p(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .PipePosY1(PipeY1), .PipePosX1(PipeX1), .PipePosY2(PipeY2), .PipePosX2(PipeX2), .Lost(lost));
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
-	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score), .PipeX(PipeX), .PipeY(PipeY), .BirdX(BirdX), .BirdY(BirdY));
+	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score), .PipeX1(PipeX1), .PipeY1(PipeY1), .PipeX2(PipeX2), .PipeY2(PipeY2), .BirdX(BirdX), .BirdY(BirdY));
 	FlappyBird fb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Flap_Button(BtnC), .YBird(BirdY), .XBird(BirdX), .q_I(birdQI), .q_Grav(birdQG), .q_Flap(birdQF), .q_UnPress(birdQU));
 	
 	assign Dp = 1;
