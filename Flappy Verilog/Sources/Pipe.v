@@ -1,11 +1,11 @@
-module pipe(Clk, Reset, Start, PipePosY1, PipePosX1, PipePosX2, PipePosY2 Lost);
+module pipe(Clk, Reset, Start, PipePosY1, PipePosX1, PipePosX2, PipePosY2, Lost);
 
     // 800px x 525px
     output reg [9:0] PipePosY1;
     output reg [9:0] PipePosX1;
 
-    output reg [9:0] PipePosY1;
-    output reg [9:0] PipePosX1;
+    output reg [9:0] PipePosY2;
+    output reg [9:0] PipePosX2;
 	/*  INPUTS */
 	input	Clk, Reset, Start, Lost;
 	reg [4:0] state;	
@@ -17,7 +17,7 @@ module pipe(Clk, Reset, Start, PipePosY1, PipePosX1, PipePosX2, PipePosY2 Lost);
     reg[1:0][9:0] Pipe1Height;
     reg[2:0][9:0] Pipe2Height;
     
-    reg 2Start, i, j;
+    reg Start2, i, j;
 	localparam 	
 	I = 5'b00001, PREP = 5'b00010, MOVE = 5'b00100, LOST = 5'b10000, UNK = 5'bXXXXX;
 	
@@ -41,7 +41,7 @@ module pipe(Clk, Reset, Start, PipePosY1, PipePosX1, PipePosX2, PipePosY2 Lost);
         PipePosY2 <= 75;
         i <= 0;
         j <= 0;
-        2Start = 0;
+        Start2 = 0;
         state <= I;
     end
 
@@ -49,7 +49,7 @@ module pipe(Clk, Reset, Start, PipePosY1, PipePosX1, PipePosX2, PipePosY2 Lost);
     begin
         PipeSpeed <= PipeSpeed + 50'd1;
         if (PipePosX1 == 288)
-            2Start <= 1;
+            Start2 <= 1;
         if (PipePosX1 == 1000) 
         begin
             PipePosY1 <= Pipe1Height[i];
@@ -64,7 +64,7 @@ module pipe(Clk, Reset, Start, PipePosY1, PipePosX1, PipePosX2, PipePosY2 Lost);
          begin
          PipeSpeed <= 50'd0;
          PipePosX1 <= PipePosX1 - 1;
-         if (2Start)
+         if (Start2)
          PipePosX2 <= PipePosX2 - 1;
          end
     end
