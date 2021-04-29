@@ -25,6 +25,7 @@ module vga_top(
 	input ClkPort,
 	input BtnC,
 	input BtnU,
+	input BtnD,
 	input btnCpuReset,
 	
 	//VGA signal
@@ -45,18 +46,21 @@ module vga_top(
 	wire [6:0] ssdOut;
 	wire [3:0] anode;
 	wire [11:0] rgb;
-	wire [9:0] PipeX;
-	wire [9:0] PipeY;
+	wire [9:0] PipeX1;
+	wire [9:0] PipeY1;
+	wire [9:0] PipeX2;
+	wire [9:0] PipeY2;
 	wire [9:0] BirdX;
 	wire [9:0] BirdY;
-	wire lost;
-	wire birdQI, birdQG, birdQF, birdQU;
+	wire gameStateI, gameStateEnable, gameStateEnd;
 
 	pipe p(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .PipePosY(PipeY), .PipePosX(PipeX), .Lost(lost));
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
 	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score), .PipeX(PipeX), .PipeY(PipeY), .BirdX(BirdX), .BirdY(BirdY));
-	FlappyBird fb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Flap_Button(BtnC), .YBird(BirdY), .XBird(BirdX), .q_I(birdQI), .q_Grav(birdQG), .q_Flap(birdQF), .q_UnPress(birdQU));
-	
+	FlappyBird fb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Flap_Button(BtnC), .YBird(BirdY), .XBird(BirdX));
+	Game g(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Ack(BtnD), .YBird(BirdY), .XBird(BirdX), .XPipe1(PipeX1), .YPipe1(PipeY1), .XPipe2(PipeX2),.YPipe2(PipeY2), .q_I(gameStateI), .q_EN(gameStateEnable), .q_End(gameStateEnd));
+
+
 	assign Dp = 1;
 	assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg} = ssdOut[6 : 0];
     assign {An7, An6, An5, An4, An3, An2, An1, An0} = {4'b1111, anode};
@@ -66,10 +70,10 @@ module vga_top(
 	assign vgaG = rgb[7  : 4];
 	assign vgaB = rgb[3  : 0];
 	
-	assign Ld0 = birdQI;
+	/*assign Ld0 = birdQI;
 	assign Ld1 = birdQG;
 	assign Ld2 = birdQF;
-	assign Ld3 = birdQU;
+	assign Ld3 = birdQU;*/
 
 	// disable mamory ports
 	assign {MemOE, MemWR, RamCS, QuadSpiFlashCS} = 4'b1111;
