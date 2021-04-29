@@ -1,22 +1,21 @@
 
-module FlappyBird(Clk, Reset, Start, Flap_Button, YBird, XBird, q_I, q_Grav, q_Flap, q_UnPress, q_Lost);
+module FlappyBird(Clk, Reset, Start, Flap_Button, YBird, XBird);
 
 	/*  INPUTS */
 	input	Clk, Reset, Start, Flap_Button;
 	
 	output reg [9:0] YBird, XBird;		
-	output q_I, q_Grav, q_Flap, q_UnPress, q_Lost;
+	
 
 	reg [3:0] state;
 	reg [49:0] gravityTimer;
 	reg [5:0] gravity;
 
-
-	assign {q_UnPress, q_Flap, q_Grav, q_I}= state;
 		
 	localparam 	
 	I = 4'b0001, GRAV = 4'b0010, FLAP = 4'b0100, UNPRESS = 4'b1000, UNK = 4'bXXXX;
 	initial begin
+		state <= I;
 		YBird <= 100;
 		XBird <= 500;
 	end
