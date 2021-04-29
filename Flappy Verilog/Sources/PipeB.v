@@ -1,9 +1,7 @@
-module pipe(Clk, Reset, Start, PipePosYA, PipePosXA, Lost);
+module pipeB(Clk, Reset, Start, PipePosXB, PipePosYB, Lost);
 
-    // 800px x 525px
-    output reg [9:0] PipePosYA;
-    output reg [9:0] PipePosXA = 10'd1000;
-
+    output reg [9:0] PipePosYB;
+    output reg [9:0] PipePosXB = 10'd1023;
 	/*  INPUTS */
 	input	Clk, Reset, Start, Lost;
 	reg [4:0] state;	
@@ -11,46 +9,44 @@ module pipe(Clk, Reset, Start, PipePosYA, PipePosXA, Lost);
     reg Time;
 
     reg [49:0] PipeSpeed;
-    
-    reg startFlag;
 
-    reg[9:0] PipeAHeight[1:0];
+    reg[9:0]PipeBHeight[2:0];
     
-    reg [1:0] i;
+    reg [2:0] j;
 	localparam 	
 	I = 5'b00001, PREP = 5'b00010, MOVE = 5'b00100, LOST = 5'b10000, UNK = 5'bXXXXX;
 	
     initial begin
-        PipeAHeight[0] = 190;
-        PipeAHeight[1] = 270;
-        PipeAHeight[2] = 20;
-        PipeAHeight[3] = 135;
-        waitReg = 10'd0;
+        PipeBHeight[7] = 200;
+        PipeBHeight[0] = 300;
+        PipeBHeight[6] = 230;
+        PipeBHeight[4] = 170;
+        PipeBHeight[2] = 210;
+        PipeBHeight[3] = 250;
+        PipeBHeight[5] = 190;
+        PipeBHeight[1] = 100;
         PipeSpeed <= 0;
-        PipePosYA <= 200;
-        i <= 0;
-        startFlag = 0;
+        PipePosYB <= 10'd75;
+        j <= 0;
         state <= I;
     end
 
     always @ (posedge Clk) 
     begin
         PipeSpeed <= PipeSpeed + 50'd1;
-        if (waitReg == 10'd512)
-            startFlag = 1;
+        
        
+        
         if (PipeSpeed >= 50'd500000) 
          begin
-          if (PipePosXA == 0) 
+          if (PipePosXB == 0)
         begin
-             PipePosXA <= 10'd1000;
-            PipePosYA <= PipeAHeight[i];
-            i <= i+1;
+            PipePosYB <= PipeBHeight[j];
+            j <= j+1;
+            PipePosXB <= 10'd1000;
         end
-        waitReg <= waitReg + 1;
          PipeSpeed <= 50'd0;
-         if (startFlag)
-         PipePosXA <= PipePosXA - 1;
+         PipePosXB <= PipePosXB - 1;
          end
     end
 /*
