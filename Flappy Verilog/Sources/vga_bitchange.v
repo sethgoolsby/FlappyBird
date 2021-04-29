@@ -27,8 +27,8 @@ module vga_bitchange(
 	input button,
 	input [9:0] hCount, vCount,
 	input [9:0] BirdX, BirdY,
-	input [9:0] PipeY1, PipeX1,
-	input [9:0] PipeY2, PipeX2,
+	input [9:0] PipeYA, PipeXA,
+	input [9:0] PipeYB, PipeXB,
 	output reg [11:0] rgb,
 	output reg [15:0] score
    );
@@ -37,7 +37,7 @@ module vga_bitchange(
 	parameter WHITE = 12'b1111_1111_1111;
 	parameter RED   = 12'b1111_0000_0000;
 	parameter GREEN = 12'b0000_1111_0000;
-	//parameter BLUE = 12'b0000_0000_1111;
+	parameter BLUE = 12'b0000_0000_1111;
 
 	wire whiteZone;
 	wire greenMiddleSquare;
@@ -57,6 +57,8 @@ module vga_bitchange(
 		rgb = BLACK; // force black if not bright
 	 else if (pipeZone == 1)
 		rgb = GREEN;
+	else if (pipeZoneB == 1)
+	   rgb = GREEN;
 	 else if (birbs == 1)
 		rgb = WHITE; // white box
 	 else
@@ -89,7 +91,8 @@ module vga_bitchange(
 			end
 
 	assign whiteZone = ((hCount >= 10'd144) && (hCount <= 10'd784)) && ((vCount >= 10'd400) && (vCount <= 10'd475)) ? 1 : 0;
-	assign pipeZone = (((hCount >= (PipeX1 - 50)) && (hCount <= (PipeX1 + 50)) && ((vCount <= PipeY1) || (vCount >= (PipeY1 + 100)))) || ((hCount >= (PipeX2 - 50)) && (hCount <= (PipeX2 + 50)) && ((vCount <= PipeY2) || (vCount >= (PipeY2 + 100))))) ? 1 : 0;
+	assign pipeZone = ((hCount >= (PipeXA - 50)) && (hCount <= (PipeXA + 50)) && ((vCount <= PipeYA) || (vCount >= (PipeYA + 100)))) ? 1 : 0;
+	assign pipeZoneB = ((hCount >= (PipeXB - 50)) && (hCount <= (PipeXB + 50)) && ((vCount <= PipeYB) || (vCount >= (PipeYB + 100)))) ? 1 : 0;
 	assign birbs = ((hCount >= BirdX - 10) && (hCount <= BirdX + 10 )) && ((vCount >= BirdY-10) && (vCount <= BirdY + 10)) ? 1 : 0;
 
 	

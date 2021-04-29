@@ -45,18 +45,19 @@ module vga_top(
 	wire [6:0] ssdOut;
 	wire [3:0] anode;
 	wire [11:0] rgb;
-	wire [9:0] PipeX1;
-	wire [9:0] PipeY1;
-	wire [9:0] PipeX2;
-	wire [9:0] PipeY2;
+	wire [9:0] PipeXA;
+	wire [9:0] PipeYA;
+	wire [9:0] PipeXB;
+	wire [9:0] PipeYB;
 	wire [9:0] BirdX;
 	wire [9:0] BirdY;
 	wire lost;
 	wire birdQI, birdQG, birdQF, birdQU;
 
-	pipe p(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .PipePosY1(PipeY1), .PipePosX1(PipeX1), .PipePosY2(PipeY2), .PipePosX2(PipeX2), .Lost(lost));
+	pipe p(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .PipePosYA(PipeYA), .PipePosXA(PipeXA), .Lost(lost));
+	pipeB pb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .PipePosYB(PipeYB), .PipePosXB(PipeXB), .Lost(lost));
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
-	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score), .PipeX1(PipeX1), .PipeY1(PipeY1), .PipeX2(PipeX2), .PipeY2(PipeY2), .BirdX(BirdX), .BirdY(BirdY));
+	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score), .PipeXA(PipeXA), .PipeYA(PipeYA), .PipeXB(PipeXB), .PipeYB(PipeYB), .BirdX(BirdX), .BirdY(BirdY));
 	FlappyBird fb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Flap_Button(BtnC), .YBird(BirdY), .XBird(BirdX), .q_I(birdQI), .q_Grav(birdQG), .q_Flap(birdQF), .q_UnPress(birdQU));
 	
 	assign Dp = 1;
