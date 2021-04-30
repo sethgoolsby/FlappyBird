@@ -57,7 +57,8 @@ module pipe(Clk, Reset, Start, PipePosYA, PipePosXA);
     end
     else
     begin
-        PipePosXA = 10'd1000;
+        PipePosXA <= 10'd1000;
+        PipePosYA <= 200;
     end
     end
 /*
