@@ -29,11 +29,12 @@ module FlappyBird(Clk, Reset, Start, Flap_Button, YBird, XBird);
 			YBird <= 10'bX;
 			XBird <= 10'bX;
 			gravityTimer <= 50'bX;
-			gravity <= 10'bX;
-		  end
-		else				// ****** TODO ****** complete several parts
+			gravity <= 10'bX; 
+		 end
+		else	
+		begin			// ****** TODO ****** complete several parts
 				case(state)	
-					I:
+				I:
 					begin
 						YBird <= 100;
 						XBird <= 500;
@@ -96,6 +97,7 @@ module FlappyBird(Clk, Reset, Start, Flap_Button, YBird, XBird);
 						state <= GRAV;
 					end
 				endcase
+			end
 	end
 		
 	// OFL

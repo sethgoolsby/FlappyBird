@@ -54,12 +54,14 @@ module vga_top(
 	wire [9:0] BirdY;
 	wire gameStateI, gameStateEnable, gameStateEnd;
 
-	pipe p(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .PipePosY(PipeY), .PipePosX(PipeX), .Lost(lost));
-	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright),s .hCount(hc), .vCount(vc));
-	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score), .PipeX(PipeX), .PipeY(PipeY), .BirdX(BirdX), .BirdY(BirdY));
+	pipe p(.Clk(ClkPort), .Reset(btnCpuReset), .Start(gameStateEnable), .PipePosYA(PipeY1), .PipePosXA(PipeX1));
+	pipeB pb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(gameStateEnable), .PipePosXB(PipeX2), .PipePosYB(PipeY2));
+	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
+	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .hCount(hc), .vCount(vc), .rgb(rgb), .PipeX1(PipeX1), .PipeY1(PipeY1), .PipeX2(PipeX2), .PipeY2(PipeY2), .BirdX(BirdX), .BirdY(BirdY));
 	FlappyBird fb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Flap_Button(BtnC), .YBird(BirdY), .XBird(BirdX));
-	Game g(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Ack(BtnD), .YBird(BirdY), .XBird(BirdX), .XPipe1(PipeX1), .YPipe1(PipeY1), .XPipe2(PipeX2),.YPipe2(PipeY2), .q_I(gameStateI), .q_EN(gameStateEnable), .q_End(gameStateEnd));
-
+	Game g(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Ack(BtnD), .YBird(BirdY), .XBird(BirdX), .XPipe1(PipeX1), .YPipe1(PipeY1), .XPipe2(PipeX2),.YPipe2(PipeY2), .q_I(gameStateI), .q_EN(gameStateEnable), .q_End(gameStateEnd), .points(score));
+	counter c(.clk(ClkPort), .displayNumber(score), .anode(anode), .ssdOut(ssdOut));
+	
 
 	assign Dp = 1;
 	assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg} = ssdOut[6 : 0];
@@ -70,10 +72,10 @@ module vga_top(
 	assign vgaG = rgb[7  : 4];
 	assign vgaB = rgb[3  : 0];
 	
-	/*assign Ld0 = birdQI;
-	assign Ld1 = birdQG;
-	assign Ld2 = birdQF;
-	assign Ld3 = birdQU;*/
+	assign Ld0 = gameStateI;
+	assign Ld1 = gameStateEnable;
+	assign Ld2 = gameStateEnd;
+	/*assign Ld3 = birdQU;*/
 
 	// disable mamory ports
 	assign {MemOE, MemWR, RamCS, QuadSpiFlashCS} = 4'b1111;

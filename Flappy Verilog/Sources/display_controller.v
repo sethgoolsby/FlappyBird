@@ -22,13 +22,14 @@
 // counter), 
 //////////////////////////////////////////////////////////////////////////////////
 module display_controller(
-	input clk,
-	output hSync, vSync,
-	output reg bright,
-	output reg[9:0] hCount, 
-	output reg [9:0] vCount // Covers 800, width of the screen, because it's 2^10
+	 // Covers 800, width of the screen, because it's 2^10
+	 clk, hSync, vSync, bright, hCount, vCount
 	);
-	
+	input clk;
+	output hSync, vSync;
+	output reg bright;
+	output reg[9:0] hCount;
+	output reg [9:0] vCount;
 	reg pulse;
 	reg clk25;
 	

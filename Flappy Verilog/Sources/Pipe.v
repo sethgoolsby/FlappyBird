@@ -1,11 +1,11 @@
-module pipe(Clk, Reset, Start, PipePosYA, PipePosXA, Lost);
+module pipe(Clk, Reset, Start, PipePosYA, PipePosXA);
 
     // 800px x 525px
     output reg [9:0] PipePosYA;
     output reg [9:0] PipePosXA = 10'd1000;
 
 	/*  INPUTS */
-	input	Clk, Reset, Start, Lost;
+	input	Clk, Reset, Start;
 	reg [4:0] state;	
     reg [9:0] waitReg;
     reg Time;
@@ -35,6 +35,8 @@ module pipe(Clk, Reset, Start, PipePosYA, PipePosXA, Lost);
 
     always @ (posedge Clk) 
     begin
+        if(Start)
+        begin
         PipeSpeed <= PipeSpeed + 50'd1;
         if (waitReg == 10'd512)
             startFlag = 1;
@@ -52,6 +54,7 @@ module pipe(Clk, Reset, Start, PipePosYA, PipePosXA, Lost);
          if (startFlag)
          PipePosXA <= PipePosXA - 1;
          end
+    end
     end
 /*
 	// NSL AND SM

@@ -1,9 +1,9 @@
-module pipeB(Clk, Reset, Start, PipePosXB, PipePosYB, Lost);
+module pipeB(Clk, Reset, Start, PipePosXB, PipePosYB);
 
     output reg [9:0] PipePosYB;
     output reg [9:0] PipePosXB = 10'd1023;
 	/*  INPUTS */
-	input	Clk, Reset, Start, Lost;
+	input	Clk, Reset, Start;
 	reg [4:0] state;	
     reg [9:0] waitReg;
     reg Time;
@@ -33,10 +33,9 @@ module pipeB(Clk, Reset, Start, PipePosXB, PipePosYB, Lost);
 
     always @ (posedge Clk) 
     begin
+        if(Start)
+        begin
         PipeSpeed <= PipeSpeed + 50'd1;
-        
-       
-        
         if (PipeSpeed >= 50'd500000) 
          begin
           if (PipePosXB == 0)
@@ -48,6 +47,7 @@ module pipeB(Clk, Reset, Start, PipePosXB, PipePosYB, Lost);
          PipeSpeed <= 50'd0;
          PipePosXB <= PipePosXB - 1;
          end
+        end
     end
 /*
 	// NSL AND SM
