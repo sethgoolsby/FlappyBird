@@ -43,7 +43,7 @@ begin
             end
             GAME:
             begin
-                if(Collide /*|| Fall*/)
+                if(Collide1 || Collide2 || Fall)
                 begin
                     state <= END;
                 end
@@ -85,7 +85,7 @@ begin
 end
 assign Collide1 = (((XBird + 10) > (XPipe1 - 50)) && ((XBird - 10) < (XPipe1 + 50)))&&(((YBird - 10)<(YPipe1))||((YBird + 10) > (YPipe1 + 150)));//((((YBird - 10) < YPipe1) || (YBird + 10) > (YPipe1 + 150)) && (((XBird + 10) > (XPipe1 - 50))&&((XBird - 10) < (YPipe1 + 50)) )) ? 1 : 0;//(!((XBird + 10) < (XPipe1 - 50)) || ((XBird - 10) > (XPipe1 + 50)) || (((YBird + 10) < (YPipe1 + 150)) && ((YBird - 10) > YPipe1))) || (!((XBird + 10) < (XPipe2 - 50)) || ((XBird - 10) > (XPipe2 + 50)) || (((YBird + 10) < (YPipe2 + 150)) && ((YBird - 10) > YPipe2)));
 assign Collide2 = (((XBird + 10) > (XPipe2 - 50)) && ((XBird - 10) < (XPipe2 + 50)))&&(((YBird - 10)<(YPipe2))||((YBird + 10) > (YPipe2 + 150)));
-//assign Fall =  YBird < 1000;
+assign Fall =  YBird > 1000;
 
 endmodule
 

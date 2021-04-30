@@ -58,7 +58,7 @@ module vga_top(
 	pipeB pb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(gameStateEnable), .PipePosXB(PipeX2), .PipePosYB(PipeY2));
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
 	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .hCount(hc), .vCount(vc), .rgb(rgb), .PipeX1(PipeX1), .PipeY1(PipeY1), .PipeX2(PipeX2), .PipeY2(PipeY2), .BirdX(BirdX), .BirdY(BirdY));
-	FlappyBird fb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Flap_Button(BtnC), .YBird(BirdY), .XBird(BirdX));
+	FlappyBird fb(.Clk(ClkPort), .Reset(btnCpuReset), .Start(gameStateEnable), .Flap_Button(BtnC), .YBird(BirdY), .XBird(BirdX));
 	Game g(.Clk(ClkPort), .Reset(btnCpuReset), .Start(BtnU), .Ack(BtnD), .YBird(BirdY), .XBird(BirdX), .XPipe1(PipeX1), .YPipe1(PipeY1), .XPipe2(PipeX2),.YPipe2(PipeY2), .q_I(gameStateI), .q_EN(gameStateEnable), .q_End(gameStateEnd), .points(score));
 	counter c(.clk(ClkPort), .displayNumber(score), .anode(anode), .ssdOut(ssdOut));
 	

@@ -33,6 +33,8 @@ module FlappyBird(Clk, Reset, Start, Flap_Button, YBird, XBird);
 		 end
 		else	
 		begin			// ****** TODO ****** complete several parts
+				if(Start)
+				begin
 				case(state)	
 				I:
 					begin
@@ -98,6 +100,13 @@ module FlappyBird(Clk, Reset, Start, Flap_Button, YBird, XBird);
 					end
 				endcase
 			end
+			else
+			begin
+				YBird <= 100;
+				XBird <= 500;
+				state <= I;
+			end
+		end
 	end
 		
 	// OFL

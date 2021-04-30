@@ -48,6 +48,10 @@ module pipeB(Clk, Reset, Start, PipePosXB, PipePosYB);
          PipePosXB <= PipePosXB - 1;
          end
         end
+        else
+        begin
+            PipePosYB <= 10'd75;
+        end
     end
 /*
 	// NSL AND SM

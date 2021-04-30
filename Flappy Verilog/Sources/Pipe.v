@@ -55,6 +55,10 @@ module pipe(Clk, Reset, Start, PipePosYA, PipePosXA);
          PipePosXA <= PipePosXA - 1;
          end
     end
+    else
+    begin
+        PipePosXA = 10'd1000;
+    end
     end
 /*
 	// NSL AND SM
