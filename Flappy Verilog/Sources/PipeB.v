@@ -50,7 +50,7 @@ module pipeB(Clk, Reset, Start, PipePosXB, PipePosYB);
         end
         else
         begin
-            PipePosYB <= 10'd75;
+            PipePosXB = 10'd1023
         end
     end
 /*
