@@ -59,6 +59,8 @@ module pipe(Clk, Reset, Start, PipePosYA, PipePosXA);
     begin
         PipePosXA <= 10'd1000;
         PipePosYA <= 200;
+        startFlag <= 0;
+        waitReg <= 0;
     end
     end
 /*
